@@ -1,3 +1,41 @@
+<?php
+
+$minChars = range('a', 'z');
+$maxChars = range('A', 'Z');
+$numChars = range('0', '9');
+$specialChars = array('!', '#', '$', '%', '&', '(', ')', '*', '+', ',', '-', '.', '/', ':', ';', '<', '=', '>', '?', '@', '[', ']', '^', '_', '{', '}' );
+$allChars = array($minChars, $maxChars, $numChars, $specialChars);
+function createPassword($arrChars, $strLength) {
+    $newPassword = "";
+    //Add at least one char for each type
+    foreach ($arrChars as $char) {
+        $newPassword .= $char[array_rand($char)];
+    }
+    //Merge the 4 array's into one
+    $fullChars = call_user_func_array('array_merge', $arrChars);
+    //Add char till strLength
+    while (strlen($newPassword) < $strLength) {
+        $newChar = $fullChars[array_rand($fullChars)];
+        if (!str_contains($newPassword, $newChar)) {
+        $newPassword .= $newChar;
+        }
+    }
+
+    $passShuffle = str_shuffle($newPassword);
+    return $passShuffle;
+}
+
+
+if (!empty($_GET["passlngt"])) {
+    $passLength = $_GET["passlngt"];
+    $passPrinted = createPassword($allChars, $passLength);
+}
+else {
+    $passPrinted = "";
+}
+?>
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -21,6 +59,9 @@
                     <div class="col-auto">
                         <select class="form-select" name="passlngt">
                             <option value="" selected>Lunghezza Password</option>
+                            <?php for($i = 8; $i <= 32; $i++) {?>
+                                <option value=<?php echo $i ?>><?php echo $i ?></option>
+                            <?php }?>
                         </select>
                     </div>
                     <!-- BUTTON -->
@@ -33,12 +74,14 @@
                 </form>
             </div>
         </div>
-
-        <div class="row mb-5">
-            <h2 class="mb-3 col-12 text-center">Password Generata</h2>
-            <div class="col py-4 px-3 bg-success">
+        <?php if ($passPrinted){?>
+        <div class="row mb-5 text-center justify-content-center">
+            <h2 class="mb-3 col-12"><?php echo "Password $passLength caratteri"?></h2>
+            <div class="col-auto py-4 px-3 bg-success rounded-3">
+                <h3><?php echo htmlspecialchars($passPrinted)?></h3>
             </div>
         </div>
+        <?php }?>
     </main>
 </body>
 </html>
