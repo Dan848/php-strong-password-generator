@@ -1,38 +1,5 @@
 <?php
-
-$minChars = range('a', 'z');
-$maxChars = range('A', 'Z');
-$numChars = range('0', '9');
-$specialChars = array('!', '#', '$', '%', '&', '(', ')', '*', '+', ',', '-', '.', '/', ':', ';', '<', '=', '>', '?', '@', '[', ']', '^', '_', '{', '}' );
-$allChars = array($minChars, $maxChars, $numChars, $specialChars);
-function createPassword($arrChars, $strLength) {
-    $newPassword = "";
-    //Add at least one char for each type
-    foreach ($arrChars as $char) {
-        $newPassword .= $char[array_rand($char)];
-    }
-    //Merge the 4 array's into one
-    $fullChars = call_user_func_array('array_merge', $arrChars);
-    //Add char till strLength
-    while (strlen($newPassword) < $strLength) {
-        $newChar = $fullChars[array_rand($fullChars)];
-        if (!str_contains($newPassword, $newChar)) {
-        $newPassword .= $newChar;
-        }
-    }
-
-    $passShuffle = str_shuffle($newPassword);
-    return $passShuffle;
-}
-
-
-if (!empty($_GET["passlngt"])) {
-    $passLength = $_GET["passlngt"];
-    $passPrinted = createPassword($allChars, $passLength);
-}
-else {
-    $passPrinted = "";
-}
+include __DIR__ . "./data/functions.php";
 ?>
 
 
@@ -74,11 +41,11 @@ else {
                 </form>
             </div>
         </div>
-        <?php if ($passPrinted){?>
+        <?php if (printPassword($_GET["passlngt"], $allChars)){?>
         <div class="row mb-5 text-center justify-content-center">
-            <h2 class="mb-3 col-12"><?php echo "Password $passLength caratteri"?></h2>
+            <h2 class="mb-3 col-12"><?php echo "Password {$_GET["passlngt"]} caratteri"?></h2>
             <div class="col-auto py-4 px-3 bg-success rounded-3">
-                <h3><?php echo htmlspecialchars($passPrinted)?></h3>
+                <h3><?php echo htmlspecialchars(printPassword($_GET["passlngt"], $allChars))?></h3>
             </div>
         </div>
         <?php }?>
