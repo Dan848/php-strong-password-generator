@@ -1,5 +1,4 @@
 <?php
-include __DIR__ .  "./data.php";
 function createPassword($arrChars, $strLength) {
     $newPassword = "";
     //Add at least one char for each type
@@ -22,9 +21,18 @@ function createPassword($arrChars, $strLength) {
 
 function printPassword($pswLength, $arrChars) {
     if (!empty($pswLength)) {
-      return createPassword($arrChars, $pswLength);
+        $_SESSION['isPassword'] = createPassword($arrChars, $pswLength);
+        return $_SESSION['isPassword'];
     }
     else {
-       return "";
+        $_SESSION['isPassword'] = "";
+       return $_SESSION['isPassword'];
+    }
+}
+
+function passToSession($arrChars) {
+    if (isset($_GET["passlngt"])){
+        $_SESSION["passLngt"] = $_GET["passlngt"];
+    printPassword($_SESSION["passLngt"], $arrChars);
     }
 }
