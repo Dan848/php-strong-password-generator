@@ -1,7 +1,9 @@
 <?php
-include __DIR__ . './data/data.php';
-include __DIR__ . './functions/functions.php';
-passToSession($allChars);
+session_start();
+if (empty($_SESSION['isPassword'])) {
+    header("Location: ./index.php");
+}
+
 ?>
 
 <?php include __DIR__ . './template/headhtml.php' ?>
